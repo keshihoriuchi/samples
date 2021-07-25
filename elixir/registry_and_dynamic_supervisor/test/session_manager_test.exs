@@ -1,4 +1,4 @@
-defmodule SessionManagerTest do
+defmodule SessionManager.SessionManagerTest do
   use ExUnit.Case
 
   alias SessionManager.SessionSupervisor

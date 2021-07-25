@@ -1,11 +1,13 @@
 defmodule SessionManager.SessionWorker do
   use GenServer, restart: :temporary
 
+  # (Dynamic)Supervisor向けのAPI
   def start_link({k, v}) do
     name = {:via, Registry, {SessionManager.SessionRegistry, k}}
     GenServer.start_link(__MODULE__, {k, v}, name: name)
   end
 
+  # 以下2つClient向けのAPI
   def get_value(pid) do
     GenServer.call(pid, :getvalue)
   end
@@ -14,6 +16,7 @@ defmodule SessionManager.SessionWorker do
     GenServer.cast(pid, :stop)
   end
 
+  # 以下3つGenServerのコールバック実装
   @impl true
   def init({k, v}) do
     {:ok, {k, v}}
