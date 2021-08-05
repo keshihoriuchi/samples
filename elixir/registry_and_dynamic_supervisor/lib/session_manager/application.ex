@@ -10,7 +10,7 @@ defmodule SessionManager.Application do
       {Registry, keys: :unique, name: SessionManager.SessionRegistry}
     ]
 
-    opts = [strategy: :one_for_one, name: SessionManager.Supervisor]
+    opts = [strategy: :one_for_all, name: SessionManager.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
