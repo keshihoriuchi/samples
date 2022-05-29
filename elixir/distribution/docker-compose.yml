@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  node1:
+    build: .
+    links:
+      - node2
+  node2:
+    build: .
