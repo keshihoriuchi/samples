@@ -62,7 +62,7 @@ function createTableAndStream(
     "projection.logged_date.interval": 1,
     "projection.logged_date.interval.unit": "DAYS",
     "storage.location.template":
-      `s3://${bucket.bucketName}/data/${name}/` + "${date}",
+      `s3://${bucket.bucketName}/data/${name}/` + "${logged_date}",
   };
 
   const role = new Role(scope, `Stream Glue Access Role ${name}`, {
