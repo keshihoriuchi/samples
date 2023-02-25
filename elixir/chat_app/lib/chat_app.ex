@@ -1,0 +1,2 @@
+defmodule ChatApp do
+end
