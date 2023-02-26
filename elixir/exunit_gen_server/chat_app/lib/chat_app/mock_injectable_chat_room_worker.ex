@@ -14,12 +14,12 @@ defmodule ChatApp.MockInjectableChatRoomWorker do
     GenServer.cast(__MODULE__, {:send_msg, from_id, msg})
   end
 
+  ## 以下GenServerコールバック
+
   @impl true
   def init(%{user_mod: user_mod}) do
     {:ok, %{users: %{}, user_mod: user_mod}}
   end
-
-  ## 以下GenServerコールバック
 
   @impl true
   def handle_call({:join, pid, user_id}, _from, %{users: users} = state) do
