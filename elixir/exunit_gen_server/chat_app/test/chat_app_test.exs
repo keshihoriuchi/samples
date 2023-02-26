@@ -12,8 +12,7 @@ defmodule ChatAppTest do
   end
 
   describe "Applicationの子孫としてGenServerを起動パターン" do
-    test "User1 が ChatRoom に send_msg でメッセージを送ると" <>
-           "User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
+    test "User1 が ChatRoom に send_msg でメッセージを送ると User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
       {:ok, pid1} = UserWorker.start_link(self())
       :ok = UserWorker.join(pid1, "user1")
 
@@ -27,8 +26,7 @@ defmodule ChatAppTest do
   end
 
   describe "ExUnitの子としてGenServerを起動パターン" do
-    test "User1 が ChatRoom に send_msg でメッセージを送ると" <>
-           "User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
+    test "User1 が ChatRoom に send_msg でメッセージを送ると User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
       {:ok, room_pid} = GenServer.start_link(ChatRoomWorker, %{})
       :ok = GenServer.call(room_pid, {:join, self(), "user1"})
       :ok = GenServer.call(room_pid, {:join, self(), "user2"})
@@ -39,8 +37,7 @@ defmodule ChatAppTest do
   end
 
   describe "コールバックを直接呼ぶパターン" do
-    test "User1 が ChatRoom に send_msg でメッセージを送ると" <>
-           "User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
+    test "User1 が ChatRoom に send_msg でメッセージを送ると User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
       assert {:noreply, %{users: %{}}} =
                ChatRoomWorker.handle_cast(
                  {:send_msg, "user1", "hello"},
@@ -52,8 +49,7 @@ defmodule ChatAppTest do
   end
 
   describe "ExUnitの子としてGenServerを起動パターン (モック差込版)" do
-    test "User1 が ChatRoom に send_msg でメッセージを送ると" <>
-           "User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
+    test "User1 が ChatRoom に send_msg でメッセージを送ると User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
       {:ok, room_pid} = GenServer.start_link(MockInjectableChatRoomWorker, %{user_mod: UserMock})
       :ok = GenServer.call(room_pid, {:join, self(), "user1"})
       :ok = GenServer.call(room_pid, {:join, self(), "user2"})
@@ -64,8 +60,7 @@ defmodule ChatAppTest do
   end
 
   describe "コールバックを直接呼ぶパターン (モック差込版)" do
-    test "User1 が ChatRoom に send_msg でメッセージを送ると" <>
-           "User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
+    test "User1 が ChatRoom に send_msg でメッセージを送ると User2 は ChatRoom から handle_msg で User1 が送ったメッセージを受信する" do
       assert {:noreply, %{users: %{}}} =
                MockInjectableChatRoomWorker.handle_cast(
                  {:send_msg, "user1", "hello"},
