@@ -1,11 +1,6 @@
 defmodule ChatApp.MockInjectableChatRoomWorker do
   alias ChatApp.UserWorker
   use GenServer
-  require Logger
-
-  def start_link({:test, user_mod}) do
-    {:ok, _pid} = GenServer.start_link(__MODULE__, %{user_mod: user_mod})
-  end
 
   def start_link(_arg) do
     {:ok, _pid} = GenServer.start_link(__MODULE__, %{user_mod: UserWorker}, name: __MODULE__)

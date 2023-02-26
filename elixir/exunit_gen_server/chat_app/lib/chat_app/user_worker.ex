@@ -1,5 +1,5 @@
 defmodule ChatApp.UserWorker do
-  use GenServer
+  use GenServer, restart: :temporary
   alias ChatApp.ChatRoomWorker
 
   def start_link(pid) do

@@ -1,11 +1,6 @@
 defmodule ChatApp.ChatRoomWorker do
   alias ChatApp.UserWorker
   use GenServer
-  require Logger
-
-  def start_link(:test) do
-    {:ok, _pid} = GenServer.start_link(__MODULE__, %{})
-  end
 
   def start_link(_arg) do
     {:ok, _pid} = GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
@@ -19,12 +14,12 @@ defmodule ChatApp.ChatRoomWorker do
     GenServer.cast(__MODULE__, {:send_msg, from_id, msg})
   end
 
+  ## 以下GenServerコールバック
+
   @impl true
   def init(_arg) do
     {:ok, %{users: %{}}}
   end
-
-  ## 以下GenServerコールバック
 
   @impl true
   def handle_call({:join, pid, user_id}, _from, %{users: users} = state) do
