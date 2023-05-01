@@ -14,13 +14,18 @@ const Claims = z.object({
 type Claims = z.infer<typeof Claims>;
 
 export const GET = (async ({ locals, url, cookies }) => {
+	const session = locals.session;
+	if (session.user_id !== undefined) {
+		throw error(400, 'session state is invalid');
+	}
+
 	// パラメータの検証
 	const code = url.searchParams.get('code');
 	if (code === null) {
 		throw error(400, 'code is required');
 	}
 	const state = url.searchParams.get('state');
-	if (state === null || state !== locals.session.oauth_state) {
+	if (state === null || state !== session.oauth_state) {
 		throw error(400, 'state is invalid');
 	}
 
@@ -54,11 +59,11 @@ export const GET = (async ({ locals, url, cookies }) => {
 	}
 
 	// ログイン後にリダイレクトさせるURLの設定
-	const afterLoginPath = locals.session.after_login_path;
+	const afterLoginPath = session.after_login_path;
 	const location = afterLoginPath !== undefined ? afterLoginPath : '/console';
 
 	// ログイン前セッションを解除してログイン後セッションを設定する
-	const newSession = await login(locals.session, claims.email, claims.sub);
+	const newSession = await login(session, claims.email, claims.sub);
 	locals.session = newSession;
 	cookies.set(COOKIE_NAME, newSession.session_id, { path: '/' });
 

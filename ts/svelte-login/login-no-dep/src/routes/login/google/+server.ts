@@ -1,12 +1,16 @@
 import { CLIENT_ID, REDIRECT_URI } from '$lib/server/constants';
 import type { RequestHandler } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import crypto from 'crypto';
 import querystring from 'querystring';
 
 // OpenID ConnectのAuthorization Endpointにリダイレクト
 // cf. https://developers.google.com/identity/openid-connect/openid-connect?hl=ja#authenticationuriparameters
 export const GET = (async ({ locals }) => {
+	if (locals.session.user_id !== undefined) {
+		throw error(400, 'session state is invalid');
+	}
+
 	const state = crypto.randomBytes(8).toString('hex');
 	const nonce = crypto.randomBytes(8).toString('hex');
 

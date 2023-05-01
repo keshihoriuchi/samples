@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { initSession, login, findSession } from '$lib/server/session';
+import { initSession, login, findSession, type PreloginSession } from '$lib/server/session';
 import { setTimeout } from 'timers/promises';
 
 describe('Session', () => {
@@ -13,7 +13,7 @@ describe('Session', () => {
 		session.oauth_state = '1234';
 		await session.save();
 		const foundSession = await findSession(session.session_id);
-		expect(foundSession?.oauth_state).toBe(session.oauth_state);
+		expect((foundSession as PreloginSession).oauth_state).toBe(session.oauth_state);
 	});
 
 	test('findSessionでsessionが見つからない', async () => {
@@ -31,7 +31,6 @@ describe('Session', () => {
 		expect(newSession.session_id).not.toBe(session.session_id);
 		expect(newSession.email).toBe('abc@example.com');
 		expect(newSession.user_id).toBe('efg');
-		expect(newSession.oauth_state).toBe(undefined);
 	});
 
 	test(
