@@ -1,5 +1,5 @@
 {
-	"name": "login-no-dep",
+	"name": "svelte-login-sample",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
