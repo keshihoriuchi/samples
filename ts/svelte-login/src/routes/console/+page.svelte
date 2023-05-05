@@ -3,5 +3,5 @@
 	export let data: PageData;
 </script>
 
-<div>Email: {data.email}, UserID: {data.user_id}</div>
+<div>Email: {data.email}</div>
 <div><a href="/logout">ログアウト</a></div>

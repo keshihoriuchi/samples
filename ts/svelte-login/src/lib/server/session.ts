@@ -2,7 +2,10 @@ import dynamoose from 'dynamoose';
 import crypto from 'crypto';
 import type { Item } from 'dynamoose/dist/Item';
 
-// ログイン前のセッションを表す型とスキーマ
+// dynamodb localを使う設定。本番では別設定になるように分岐する必要がある
+dynamoose.aws.ddb.local();
+
+// アイテムの型の定義
 export interface PreloginSession extends Item {
 	user_id?: undefined;
 	session_id: string;
@@ -11,6 +14,16 @@ export interface PreloginSession extends Item {
 	after_login_path?: string;
 }
 
+export interface LoginSession extends Item {
+	user_id: string;
+	session_id: string;
+	ttl: number;
+	email: string;
+}
+
+export type Session = PreloginSession | LoginSession;
+
+// スキーマの定義
 const preloginSessionSchema = new dynamoose.Schema({
 	session_id: {
 		type: String,
@@ -20,14 +33,6 @@ const preloginSessionSchema = new dynamoose.Schema({
 	oauth_state: String,
 	after_login_path: String
 });
-
-// ログイン後のセッションを表す型とスキーマ
-export interface LoginSession extends Item {
-	user_id: string;
-	session_id: string;
-	ttl: number;
-	email: string;
-}
 
 const loginSessionSchema = new dynamoose.Schema({
 	session_id: {
@@ -44,11 +49,7 @@ const loginSessionSchema = new dynamoose.Schema({
 	email: String
 });
 
-export type Session = PreloginSession | LoginSession;
-
-// dynamodb localを使う設定。本番では別設定になるように分岐する必要がある
-dynamoose.aws.ddb.local();
-
+// モデルの定義
 const Session = dynamoose.model<Session>('Session', [loginSessionSchema, preloginSessionSchema]);
 
 // テーブルを作成する
@@ -65,7 +66,7 @@ new dynamoose.Table('login_sample_session', [Session], {
 export async function initSession(): Promise<PreloginSession> {
 	const session_id = crypto.randomBytes(16).toString('hex');
 	const session = new Session({ session_id });
-	await session.save();
+	await session.save({ overwrite: false, return: 'item' });
 	return session as PreloginSession;
 }
 
