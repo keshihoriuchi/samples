@@ -1,38 +1,10 @@
-# create-svelte
+SvelteKit でログイン機能を実装するサンプルコード
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## 動かし方
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+1. Google ログイン用の ClientID/ClientSecret を Google から取得する
+   - cf. https://developers.google.com/identity/openid-connect/openid-connect
+2. src/lib/server/constants.ts の CLIENT_ID と CLIENT_SECRET を取得した ClientID/ClientSecret で書き換える
+3. `docker compose up -d`を実行して DynamoDB Local を起動する
+4. `npm install && npm run dev`を実行して SvelteKit を起動する
+5. http://localhost:5173 にブラウザでアクセスする
